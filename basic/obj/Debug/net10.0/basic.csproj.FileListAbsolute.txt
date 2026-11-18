@@ -1,0 +1,17 @@
+C:\game1\JwCsharp\basic\bin\Debug\net10.0\basic.exe
+C:\game1\JwCsharp\basic\bin\Debug\net10.0\basic.deps.json
+C:\game1\JwCsharp\basic\bin\Debug\net10.0\basic.runtimeconfig.json
+C:\game1\JwCsharp\basic\bin\Debug\net10.0\basic.runtimeconfig.dev.json
+C:\game1\JwCsharp\basic\bin\Debug\net10.0\basic.dll
+C:\game1\JwCsharp\basic\bin\Debug\net10.0\basic.pdb
+C:\game1\JwCsharp\basic\obj\Debug\net10.0\basic.GeneratedMSBuildEditorConfig.editorconfig
+C:\game1\JwCsharp\basic\obj\Debug\net10.0\basic.AssemblyInfoInputs.cache
+C:\game1\JwCsharp\basic\obj\Debug\net10.0\basic.AssemblyInfo.cs
+C:\game1\JwCsharp\basic\obj\Debug\net10.0\basic.csproj.CoreCompileInputs.cache
+C:\game1\JwCsharp\basic\obj\Debug\net10.0\basic.sourcelink.json
+C:\game1\JwCsharp\basic\obj\Debug\net10.0\basic.dll
+C:\game1\JwCsharp\basic\obj\Debug\net10.0\refint\basic.dll
+C:\game1\JwCsharp\basic\obj\Debug\net10.0\basic.pdb
+C:\game1\JwCsharp\basic\obj\Debug\net10.0\basic.genruntimeconfig.cache
+C:\game1\JwCsharp\basic\obj\Debug\net10.0\ref\basic.dll
+C:\game1\JwCsharp\basic\obj\Debug\net10.0\basic.csproj.Up2Date
