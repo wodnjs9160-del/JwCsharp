@@ -55,7 +55,6 @@ namespace basic
             int s_hp = 50;
             // 용사 hp
             int p_hp = 100;
-            p_hp = -100;
             // 슬라임 atk
             int s_atk = 10;
             // 용사 atk

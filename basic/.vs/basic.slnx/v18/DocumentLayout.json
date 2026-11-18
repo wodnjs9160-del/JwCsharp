@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "C:\\game1\\JwCsharp\\basic\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{7B5ED284-169B-4B98-BC68-A0BB9D6FC9DE}|basic.csproj|c:\\game1\\jwcsharp\\basic\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7B5ED284-169B-4B98-BC68-A0BB9D6FC9DE}|basic.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CD82AAEA-4EA2-237F-3283-E63065207682}|basic.csproj|c:\\game1\\jwcsharp\\basic\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CD82AAEA-4EA2-237F-3283-E63065207682}|basic.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -24,7 +24,7 @@
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\game1\\JwCsharp\\basic\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAADEAAAAAAAAAAAAAwDsAAAAbAAAAAAAAAA==",
+              "ViewState": "AgIAADQAAAAAAAAAAAAAwEwAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-11-18T11:14:24.59Z",
               "EditorCaption": "",
