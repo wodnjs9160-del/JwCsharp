@@ -74,7 +74,7 @@ namespace basic
             if(gameClear)
             {
                 // 게임 클리어를 안 했을 때 해야할 일이 얼마나 있나요? 많이 있습니다. 1개가 아닐 수도 있습니다.
-                Console.WriteLine("출력이 되었나요?");
+                Console.WriteLine("출력이 되었나요1?");
             }
         }
     }
