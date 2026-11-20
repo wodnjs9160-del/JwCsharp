@@ -12,6 +12,9 @@
     <Compile Remove="가위바위보.cs" />
     <Compile Remove="데이터의흐름.cs" />
     <Compile Remove="반복문.cs" />
+    <Compile Remove="배열.cs" />
+    <Compile Remove="상수와열거형.cs" />
+    <Compile Remove="열거를활용한게임예제.cs" />
   </ItemGroup>
 
 </Project>
