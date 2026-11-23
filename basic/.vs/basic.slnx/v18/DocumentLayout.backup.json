@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "C:\\game1\\JwCsharp\\basic\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CD82AAEA-4EA2-237F-3283-E63065207682}|basic.csproj|c:\\game1\\jwcsharp\\basic\\\uC0C1\uC810\uD398\uC774\uC9C0\uAD6C\uC131.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CD82AAEA-4EA2-237F-3283-E63065207682}|basic.csproj|solutionrelative:\uC0C1\uC810\uD398\uC774\uC9C0\uAD6C\uC131.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CD82AAEA-4EA2-237F-3283-E63065207682}|basic.csproj|c:\\game1\\jwcsharp\\basic\\\uD074\uB798\uC2A4\uAC8C\uC784\uBA54\uC778.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CD82AAEA-4EA2-237F-3283-E63065207682}|basic.csproj|solutionrelative:\uD074\uB798\uC2A4\uAC8C\uC784\uBA54\uC778.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CD82AAEA-4EA2-237F-3283-E63065207682}|basic.csproj|c:\\game1\\jwcsharp\\basic\\\uC0C1\uC218\uC640\uC5F4\uAC70\uD615.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CD82AAEA-4EA2-237F-3283-E63065207682}|basic.csproj|solutionrelative:\uC0C1\uC218\uC640\uC5F4\uAC70\uD615.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CD82AAEA-4EA2-237F-3283-E63065207682}|basic.csproj|c:\\game1\\jwcsharp\\basic\\\uAC8C\uC784\uC5D0\uC11C\uC0AC\uC6A9\uD558\uB294\uD074\uB798\uC2A4.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CD82AAEA-4EA2-237F-3283-E63065207682}|basic.csproj|solutionrelative:\uAC8C\uC784\uC5D0\uC11C\uC0AC\uC6A9\uD558\uB294\uD074\uB798\uC2A4.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CD82AAEA-4EA2-237F-3283-E63065207682}|basic.csproj|c:\\game1\\jwcsharp\\basic\\\uBC30\uC5F4.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CD82AAEA-4EA2-237F-3283-E63065207682}|basic.csproj|solutionrelative:\uBC30\uC5F4.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CD82AAEA-4EA2-237F-3283-E63065207682}|basic.csproj|c:\\game1\\jwcsharp\\basic\\\uD074\uB798\uC2A4.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CD82AAEA-4EA2-237F-3283-E63065207682}|basic.csproj|solutionrelative:\uD074\uB798\uC2A4.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CD82AAEA-4EA2-237F-3283-E63065207682}|basic.csproj|c:\\game1\\jwcsharp\\basic\\\uBA54\uC778.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CD82AAEA-4EA2-237F-3283-E63065207682}|basic.csproj|solutionrelative:\uBA54\uC778.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -27,42 +31,56 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "\uC0C1\uC810\uD398\uC774\uC9C0\uAD6C\uC131.cs",
-              "DocumentMoniker": "C:\\game1\\JwCsharp\\basic\\\uC0C1\uC810\uD398\uC774\uC9C0\uAD6C\uC131.cs",
-              "RelativeDocumentMoniker": "\uC0C1\uC810\uD398\uC774\uC9C0\uAD6C\uC131.cs",
-              "ToolTip": "C:\\game1\\JwCsharp\\basic\\\uC0C1\uC810\uD398\uC774\uC9C0\uAD6C\uC131.cs*",
-              "RelativeToolTip": "\uC0C1\uC810\uD398\uC774\uC9C0\uAD6C\uC131.cs*",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAAABIAAAANAAAAAAAAAA==",
+              "Title": "\uD074\uB798\uC2A4\uAC8C\uC784\uBA54\uC778.cs",
+              "DocumentMoniker": "C:\\game1\\JwCsharp\\basic\\\uD074\uB798\uC2A4\uAC8C\uC784\uBA54\uC778.cs",
+              "RelativeDocumentMoniker": "\uD074\uB798\uC2A4\uAC8C\uC784\uBA54\uC778.cs",
+              "ToolTip": "C:\\game1\\JwCsharp\\basic\\\uD074\uB798\uC2A4\uAC8C\uC784\uBA54\uC778.cs*",
+              "RelativeToolTip": "\uD074\uB798\uC2A4\uAC8C\uC784\uBA54\uC778.cs*",
+              "ViewState": "AgIAAJMAAAAAAAAAAAAUwJsAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-20T12:28:39.651Z",
-              "EditorCaption": "",
-              "OwnerCaption": "%2"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "\uBC30\uC5F4.cs",
-              "DocumentMoniker": "C:\\game1\\JwCsharp\\basic\\\uBC30\uC5F4.cs",
-              "RelativeDocumentMoniker": "\uBC30\uC5F4.cs",
-              "ToolTip": "C:\\game1\\JwCsharp\\basic\\\uBC30\uC5F4.cs",
-              "RelativeToolTip": "\uBC30\uC5F4.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-20T11:58:15.823Z",
+              "WhenOpened": "2026-11-23T12:41:42.447Z",
               "EditorCaption": "",
               "OwnerCaption": "%2"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "\uC0C1\uC218\uC640\uC5F4\uAC70\uD615.cs",
-              "DocumentMoniker": "C:\\game1\\JwCsharp\\basic\\\uC0C1\uC218\uC640\uC5F4\uAC70\uD615.cs",
-              "RelativeDocumentMoniker": "\uC0C1\uC218\uC640\uC5F4\uAC70\uD615.cs",
-              "ToolTip": "C:\\game1\\JwCsharp\\basic\\\uC0C1\uC218\uC640\uC5F4\uAC70\uD615.cs",
-              "RelativeToolTip": "\uC0C1\uC218\uC640\uC5F4\uAC70\uD615.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAAACIAAAAqAAAAAAAAAA==",
+              "Title": "\uAC8C\uC784\uC5D0\uC11C\uC0AC\uC6A9\uD558\uB294\uD074\uB798\uC2A4.cs",
+              "DocumentMoniker": "C:\\game1\\JwCsharp\\basic\\\uAC8C\uC784\uC5D0\uC11C\uC0AC\uC6A9\uD558\uB294\uD074\uB798\uC2A4.cs",
+              "RelativeDocumentMoniker": "\uAC8C\uC784\uC5D0\uC11C\uC0AC\uC6A9\uD558\uB294\uD074\uB798\uC2A4.cs",
+              "ToolTip": "C:\\game1\\JwCsharp\\basic\\\uAC8C\uC784\uC5D0\uC11C\uC0AC\uC6A9\uD558\uB294\uD074\uB798\uC2A4.cs",
+              "RelativeToolTip": "\uAC8C\uC784\uC5D0\uC11C\uC0AC\uC6A9\uD558\uB294\uD074\uB798\uC2A4.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA8AAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-11-20T11:07:34.634Z",
+              "WhenOpened": "2026-11-23T12:14:15.289Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "\uD074\uB798\uC2A4.cs",
+              "DocumentMoniker": "C:\\game1\\JwCsharp\\basic\\\uD074\uB798\uC2A4.cs",
+              "RelativeDocumentMoniker": "\uD074\uB798\uC2A4.cs",
+              "ToolTip": "C:\\game1\\JwCsharp\\basic\\\uD074\uB798\uC2A4.cs",
+              "RelativeToolTip": "\uD074\uB798\uC2A4.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-23T11:41:08.437Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "\uBA54\uC778.cs",
+              "DocumentMoniker": "C:\\game1\\JwCsharp\\basic\\\uBA54\uC778.cs",
+              "RelativeDocumentMoniker": "\uBA54\uC778.cs",
+              "ToolTip": "C:\\game1\\JwCsharp\\basic\\\uBA54\uC778.cs",
+              "RelativeToolTip": "\uBA54\uC778.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-23T11:12:00.017Z",
               "EditorCaption": "",
               "OwnerCaption": "%2"
             }
