@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="정점멤버와객체복사.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="프롬프트.md" />
+  </ItemGroup>
+
+</Project>
