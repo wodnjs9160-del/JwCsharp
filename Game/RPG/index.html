@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>OOP 다형성 RPG - 마우스 조준 파티 모드</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #12151e;
+      color: #eaeaea;
+      font-family: 'Malgun Gothic', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 12px;
+      user-select: none;
+    }
+    h1 { margin-bottom: 8px; font-size: 22px; color: #f8b400; }
+    .controls {
+      margin-bottom: 10px;
+      background: #1b2234;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #2c3855;
+    }
+    .party-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      width: 820px;
+    }
+    .hero-card {
+      flex: 1;
+      background: #1b2234;
+      border: 2px solid #2c3855;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: transform 0.1s, border-color 0.15s;
+    }
+    .hero-card:hover { transform: translateY(-2px); }
+    .hero-card.active {
+      border-color: #f8b400;
+      background: #232d45;
+      box-shadow: 0 0 12px rgba(248, 180, 0, 0.25);
+    }
+    .hero-card.dead { opacity: 0.45; }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .badge {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #0f3460;
+      color: #a8dadc;
+    }
+    .active .badge { background: #f8b400; color: #12151e; }
+    .bar-bg {
+      width: 100%;
+      height: 7px;
+      background: #333;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+    .hp-fill { height: 100%; background: #2ecc71; transition: width 0.1s; }
+    .cd-fill { height: 100%; background: #3498db; transition: width 0.05s; }
+    button {
+      background: #0f3460;
+      color: #fff;
+      border: 1px solid #e94560;
+      padding: 5px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    button:hover { background: #e94560; }
+    canvas {
+      background-color: #1e2430;
+      border: 3px solid #2c3855;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      cursor: crosshair;
+    }
+  </style>
+</head>
+<body>
+  <h1>⚔️ OOP 다형성 RPG — 마우스 포인터 조준 파티 모드</h1>
+  <div class="controls">
+    <span><strong>이동:</strong> WASD / 방향키</span>
+    <span><strong>조준:</strong> 마우스 포인터</span>
+    <span><strong>기본 공격:</strong> 좌클릭 / Space</span>
+    <span><strong>특수 스킬:</strong> 우클릭 / Shift</span>
+    <span><strong>리더 교체:</strong> 1, 2, 3</span>
+    <button onclick="resetGame()">🔄 새 게임 시작</button>
+  </div>
+
+  <div class="party-bar" id="partyBar"></div>
+  <canvas id="gameCanvas" width="820" height="520"></canvas>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const partyBar = document.getElementById('partyBar');
+
+    // ==========================================
+    // 1. 최상위 추상 클래스: Unit
+    // ==========================================
+    class Unit {
+      constructor(name, hp, speed, x, y, radius, color) {
+        if (new.target === Unit) {
+          throw new Error("추상 클래스 Unit은 직접 인스턴스화할 수 없습니다.");
+        }
+        this.name = name;
+        this.hp = hp;
+        this.maxHp = hp;
+        this.speed = speed;
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.isDead = false;
+        this.hitFlash = 0;
+        this.aimAngle = 0;
+        this.targetX = x;
+        this.targetY = y;
+      }
+
+      move(dx, dy) {
+        const len = Math.hypot(dx, dy);
+        if (len > 0) {
+          this.x += (dx / len) * this.speed;
+          this.y += (dy / len) * this.speed;
+        }
+        this.clampPosition();
+      }
+
+      clampPosition() {
+        this.x = Math.max(this.radius + 4, Math.min(canvas.width - this.radius - 4, this.x));
+        this.y = Math.max(this.radius + 4, Math.min(canvas.height - this.radius - 4, this.y));
+      }
+
+      // 유닛 간 겹침 방지 충돌 처리
+      static resolveCollisions(units) {
+        for (let i = 0; i < units.length; i++) {
+          for (let j = i + 1; j < units.length; j++) {
+            const a = units[i];
+            const b = units[j];
+            if (a.isDead || b.isDead) continue;
+
+            const dx = b.x - a.x;
+            const dy = b.y - a.y;
+            let dist = Math.hypot(dx, dy);
+            const minDist = a.radius + b.radius + 3;
+
+            if (dist < minDist) {
+              if (dist === 0) dist = 0.01;
+              const overlap = (minDist - dist) * 0.5;
+              const nx = dx / dist;
+              const ny = dy / dist;
+
+              a.x -= nx * overlap;
+              a.y -= ny * overlap;
+              b.x += nx * overlap;
+              b.y += ny * overlap;
+
+              a.clampPosition();
+              b.clampPosition();
+            }
+          }
+        }
+      }
+
+      takeDamage(amount) {
+        if (this.isDead) return;
+        this.hp -= amount;
+        this.hitFlash = 6;
+        if (this.hp <= 0) {
+          this.hp = 0;
+          this.isDead = true;
+        }
+      }
+
+      heal(amount) {
+        if (this.isDead) return;
+        this.hp = Math.min(this.maxHp, this.hp + amount);
+      }
+
+      update(game) { throw new Error("update() 메서드를 오버라이딩해야 합니다."); }
+      render(ctx) { throw new Error("render() 메서드를 오버라이딩해야 합니다."); }
+
+      drawStatus(ctx, isLeader = false) {
+        ctx.fillStyle = isLeader ? "#f8b400" : "#eaeaea";
+        ctx.font = isLeader ? "bold 12px sans-serif" : "11px sans-serif";
+        ctx.textAlign = "center";
+        const label = isLeader ? `👑 ${this.name}` : this.name;
+        ctx.fillText(label, this.x, this.y - this.radius - 14);
+
+        const barW = 42;
+        const barH = 5;
+        ctx.fillStyle = "#444";
+        ctx.fillRect(this.x - barW / 2, this.y - this.radius - 10, barW, barH);
+        ctx.fillStyle = isLeader ? "#f8b400" : "#2ecc71";
+        ctx.fillRect(this.x - barW / 2, this.y - this.radius - 10, barW * (this.hp / this.maxHp), barH);
+      }
+    }
+
+    // ==========================================
+    // 2. 인간 추상 클래스 (Human -> 플레이어 조준 & AI 동료 겸용)
+    // ==========================================
+    class Human extends Unit {
+      constructor(name, hp, speed, x, y, color, attackCdMax, skillCdMax, preferredRange, formationOffset) {
+        super(name, hp, speed, x, y, 17, color);
+        if (new.target === Human) {
+          throw new Error("추상 클래스 Human은 직접 인스턴스화할 수 없습니다.");
+        }
+        this.attackCdMax = attackCdMax;
+        this.skillCdMax = skillCdMax;
+        this.preferredRange = preferredRange;
+        this.formationOffset = formationOffset;
+        this.attackCooldown = 0;
+        this.skillCooldown = 0;
+      }
+
+      update(game) {
+        if (this.isDead) return;
+        if (this.attackCooldown > 0) this.attackCooldown--;
+        if (this.skillCooldown > 0) this.skillCooldown--;
+        if (this.hitFlash > 0) this.hitFlash--;
+
+        const isLeader = (game.leader === this);
+
+        if (isLeader) {
+          this.handlePlayerControl(game);
+        } else {
+          this.handleCompanionAI(game);
+        }
+      }
+
+      // 플레이어 조작: 키보드 이동 + 마우스 포인터 위치 조준
+      handlePlayerControl(game) {
+        let dx = 0, dy = 0;
+        if (game.keys['ArrowUp'] || game.keys['KeyW']) dy -= 1;
+        if (game.keys['ArrowDown'] || game.keys['KeyS']) dy += 1;
+        if (game.keys['ArrowLeft'] || game.keys['KeyA']) dx -= 1;
+        if (game.keys['ArrowRight'] || game.keys['KeyD']) dx += 1;
+
+        if (dx !== 0 || dy !== 0) {
+          this.move(dx, dy);
+        }
+
+        // 마우스 포인터 좌표를 조준 타겟으로 설정
+        this.targetX = game.mouse.x;
+        this.targetY = game.mouse.y;
+        this.aimAngle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
+
+        // 좌클릭 또는 Space: 마우스 위치/방향으로 기본 공격
+        if ((game.mouse.leftDown || game.keys['Space']) && this.attackCooldown === 0) {
+          this.attack(game);
+          this.attackCooldown = this.attackCdMax;
+        }
+
+        // 우클릭 또는 Shift: 마우스 위치/방향으로 특수 스킬
+        if ((game.mouse.rightDown || game.keys['ShiftLeft'] || game.keys['ShiftRight']) && this.skillCooldown === 0) {
+          this.specialSkill(game);
+          this.skillCooldown = this.skillCdMax;
+        }
+      }
+
+      // AI 동료: 가장 가까운 몬스터의 좌표를 조준하여 다형성 공격 실행
+      handleCompanionAI(game) {
+        const monsters = game.entities.filter(e => e instanceof Monster && !e.isDead);
+        let nearest = null;
+        let minDist = Infinity;
+
+        for (const m of monsters) {
+          const d = Math.hypot(m.x - this.x, m.y - this.y);
+          if (d < minDist) {
+            minDist = d;
+            nearest = m;
+          }
+        }
+
+        if (nearest && minDist < 460) {
+          this.targetX = nearest.x;
+          this.targetY = nearest.y;
+          this.aimAngle = Math.atan2(nearest.y - this.y, nearest.x - this.x);
+
+          if (minDist > this.preferredRange) {
+            this.move(nearest.x - this.x, nearest.y - this.y);
+          } else if (minDist < this.preferredRange * 0.55 && this.preferredRange > 90) {
+            this.move(this.x - nearest.x, this.y - nearest.y);
+          }
+
+          if (minDist <= this.preferredRange + 45) {
+            if (this.skillCooldown === 0) {
+              this.specialSkill(game);
+              this.skillCooldown = this.skillCdMax;
+            } else if (this.attackCooldown === 0) {
+              this.attack(game);
+              this.attackCooldown = this.attackCdMax;
+            }
+          }
+        } else if (game.leader && !game.leader.isDead) {
+          const formX = game.leader.x + this.formationOffset.x;
+          const formY = game.leader.y + this.formationOffset.y;
+          const distToForm = Math.hypot(formX - this.x, formY - this.y);
+          if (distToForm > 12) {
+            this.targetX = formX;
+            this.targetY = formY;
+            this.aimAngle = Math.atan2(formY - this.y, formX - this.x);
+            this.move(formX - this.x, formY - this.y);
+          }
+        }
+      }
+
+      attack(game) { throw new Error("attack() 구현 필요"); }
+      specialSkill(game) { throw new Error("specialSkill() 구현 필요"); }
+
+      renderBase(ctx, isLeader) {
+        if (isLeader) {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius + 6, 0, Math.PI * 2);
+          ctx.strokeStyle = "rgba(248, 180, 0, 0.7)";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.hitFlash > 0 ? "#ffffff" : this.color;
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = isLeader ? "#f8b400" : "#ffffff";
+        ctx.stroke();
+
+        // 마우스/타겟 방향 조준 인디케이터
+        const pointerDist = this.radius + 7;
+        const px = this.x + Math.cos(this.aimAngle) * pointerDist;
+        const py = this.y + Math.sin(this.aimAngle) * pointerDist;
+        ctx.beginPath();
+        ctx.arc(px, py, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = isLeader ? "#f8b400" : "#ffffff";
+        ctx.fill();
+
+        this.drawStatus(ctx, isLeader);
+      }
+    }
+
+    // ------------------------------------------
+    // 2-1. 전사 (Warrior): 마우스 방향 부채꼴 검기 + 마우스 위치로 도약 회전 베기
+    // ------------------------------------------
+    class Warrior extends Human {
+      constructor(x, y) {
+        super("전사 아서", 240, 3.4, x, y, "#3498db", 26, 130, 58, { x: -45, y: -40 });
+        this.slashEffect = null;
+        this.whirlwindTimer = 0;
+      }
+
+      attack(game) {
+        const range = 78;
+        const damage = 36;
+        this.slashEffect = { angle: this.aimAngle, range, timer: 10 };
+
+        game.entities.forEach(e => {
+          if (e instanceof Monster && !e.isDead) {
+            const dx = e.x - this.x;
+            const dy = e.y - this.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist <= range + e.radius) {
+              const angleToEnemy = Math.atan2(dy, dx);
+              const diff = Math.atan2(Math.sin(angleToEnemy - this.aimAngle), Math.cos(angleToEnemy - this.aimAngle));
+              if (Math.abs(diff) <= Math.PI / 2.6) {
+                e.takeDamage(damage);
+                e.x += Math.cos(this.aimAngle) * 18;
+                e.y += Math.sin(this.aimAngle) * 18;
+                e.clampPosition();
+              }
+            }
+          }
+        });
+      }
+
+      specialSkill(game) {
+        // 마우스 포인터 위치 방향으로 최대 120px 도약 후 360도 회전 베기 + 흡혈
+        const distToTarget = Math.hypot(this.targetX - this.x, this.targetY - this.y);
+        const dashDist = Math.min(distToTarget, 120);
+        this.x += Math.cos(this.aimAngle) * dashDist;
+        this.y += Math.sin(this.aimAngle) * dashDist;
+        this.clampPosition();
+
+        this.whirlwindTimer = 18;
+        let hitCount = 0;
+        game.entities.forEach(e => {
+          if (e instanceof Monster && !e.isDead) {
+            if (Math.hypot(e.x - this.x, e.y - this.y) <= 105 + e.radius) {
+              e.takeDamage(60);
+              hitCount++;
+            }
+          }
+        });
+        if (hitCount > 0) this.heal(hitCount * 15);
+      }
+
+      render(ctx, isLeader) {
+        if (this.isDead) return;
+        if (this.slashEffect && this.slashEffect.timer > 0) {
+          ctx.beginPath();
+          ctx.moveTo(this.x, this.y);
+          ctx.arc(this.x, this.y, this.slashEffect.range, this.slashEffect.angle - 0.85, this.slashEffect.angle + 0.85);
+          ctx.closePath();
+          ctx.fillStyle = "rgba(52, 152, 219, 0.45)";
+          ctx.fill();
+          this.slashEffect.timer--;
+        }
+        if (this.whirlwindTimer > 0) {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, 105, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(241, 196, 15, 0.25)";
+          ctx.fill();
+          ctx.strokeStyle = "#f1c40f";
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          this.whirlwindTimer--;
+        }
+        this.renderBase(ctx, isLeader);
+      }
+    }
+
+    // ------------------------------------------
+    // 2-2. 궁수 (Archer): 마우스 포인터 방향 정밀 화살 + 5갈래 일제 사격
+    // ------------------------------------------
+    class Archer extends Human {
+      constructor(x, y) {
+        super("궁수 실바나", 150, 4.1, x, y, "#2ecc71", 22, 115, 235, { x: -45, y: 45 });
+      }
+
+      attack(game) {
+        game.effects.push({
+          type: "arrow",
+          x: this.x, y: this.y,
+          vx: Math.cos(this.aimAngle) * 11,
+          vy: Math.sin(this.aimAngle) * 11,
+          angle: this.aimAngle,
+          damage: 28,
+          pierce: false,
+          life: 48
+        });
+      }
+
+      specialSkill(game) {
+        // 마우스 포인터를 중앙으로 한 부채꼴 5갈래 관통 화살
+        const spreads = [-0.28, -0.14, 0, 0.14, 0.28];
+        spreads.forEach(offset => {
+          const ang = this.aimAngle + offset;
+          game.effects.push({
+            type: "arrow",
+            x: this.x, y: this.y,
+            vx: Math.cos(ang) * 12,
+            vy: Math.sin(ang) * 12,
+            angle: ang,
+            damage: 34,
+            pierce: true,
+            hitIds: new Set(),
+            life: 44
+          });
+        });
+      }
+
+      render(ctx, isLeader) {
+        if (this.isDead) return;
+        this.renderBase(ctx, isLeader);
+      }
+    }
+
+    // ------------------------------------------
+    // 2-3. 마법사 (Mage): 마우스 포인터 좌표로 직격 화염구 + 커서 위치 메테오 폭격
+    // ------------------------------------------
+    class Mage extends Human {
+      constructor(x, y) {
+        super("마법사 멀린", 135, 3.6, x, y, "#9b59b6", 34, 155, 215, { x: 45, y: 45 });
+      }
+
+      attack(game) {
+        // 마우스 포인터 좌표(또는 최대 사거리 360px 지점)를 목표 지점으로 발사
+        const dist = Math.hypot(this.targetX - this.x, this.targetY - this.y);
+        const clampedDist = Math.min(dist, 360);
+        const destX = this.x + Math.cos(this.aimAngle) * clampedDist;
+        const destY = this.y + Math.sin(this.aimAngle) * clampedDist;
+
+        game.effects.push({
+          type: "fireball",
+          x: this.x, y: this.y,
+          destX, destY,
+          vx: Math.cos(this.aimAngle) * 7.5,
+          vy: Math.sin(this.aimAngle) * 7.5,
+          damage: 34,
+          aoeRadius: 65,
+          life: 55
+        });
+      }
+
+      specialSkill(game) {
+        // 마우스 포인터 위치에 직접 대형 메테오 소환 (최대 사거리 400px)
+        const dist = Math.hypot(this.targetX - this.x, this.targetY - this.y);
+        const clampedDist = Math.min(dist, 400);
+        const dropX = this.x + Math.cos(this.aimAngle) * clampedDist;
+        const dropY = this.y + Math.sin(this.aimAngle) * clampedDist;
+
+        game.effects.push({
+          type: "meteor",
+          x: dropX,
+          y: dropY,
+          radius: 100,
+          damage: 85,
+          timer: 18,
+          triggered: false
+        });
+      }
+
+      render(ctx, isLeader) {
+        if (this.isDead) return;
+        this.renderBase(ctx, isLeader);
+      }
+    }
+
+    // ==========================================
+    // 3. 몬스터 추상 클래스 & 3종 구현
+    // ==========================================
+    class Monster extends Unit {
+      constructor(name, hp, speed, x, y, radius, color, damage, preferredRange, scoreValue) {
+        super(name, hp, speed, x, y, radius, color);
+        if (new.target === Monster) {
+          throw new Error("추상 클래스 Monster는 직접 인스턴스화할 수 없습니다.");
+        }
+        this.damage = damage;
+        this.preferredRange = preferredRange;
+        this.scoreValue = scoreValue;
+        this.attackCooldown = 0;
+        this.flankAngle = (Math.random() - 0.5) * 1.1;
+      }
+
+      getNearestHero(game) {
+        const aliveHeroes = game.party.filter(h => !h.isDead);
+        if (aliveHeroes.length === 0) return null;
+        let nearest = aliveHeroes[0];
+        let minDist = Math.hypot(nearest.x - this.x, nearest.y - this.y);
+        for (let i = 1; i < aliveHeroes.length; i++) {
+          const d = Math.hypot(aliveHeroes[i].x - this.x, aliveHeroes[i].y - this.y);
+          if (d < minDist) {
+            minDist = d;
+            nearest = aliveHeroes[i];
+          }
+        }
+        return { hero: nearest, dist: minDist };
+      }
+
+      update(game) {
+        if (this.isDead) return;
+        if (this.attackCooldown > 0) this.attackCooldown--;
+        if (this.hitFlash > 0) this.hitFlash--;
+
+        const targetInfo = this.getNearestHero(game);
+        if (!targetInfo) return;
+
+        this.moveBehavior(targetInfo.hero, targetInfo.dist);
+        this.attackBehavior(targetInfo.hero, targetInfo.dist, game);
+      }
+
+      moveBehavior(hero, dist) { throw new Error("moveBehavior() 구현 필요"); }
+      attackBehavior(hero, dist, game) { throw new Error("attackBehavior() 구현 필요"); }
+    }
+
+    class Slime extends Monster {
+      constructor(x, y, scale = 1) {
+        super("초록 슬라임", Math.round(70 * scale), 1.6, x, y, 15, "#1abc9c", Math.round(9 * scale), 28, 100);
+        this.phase = Math.random() * Math.PI * 2;
+      }
+
+      moveBehavior(hero, dist) {
+        if (dist > this.preferredRange) {
+          const baseAngle = Math.atan2(hero.y - this.y, hero.x - this.x) + this.flankAngle * 0.4;
+          const pulse = Math.sin(Date.now() / 160 + this.phase) > 0 ? 1.65 : 0.35;
+          this.x += Math.cos(baseAngle) * this.speed * pulse;
+          this.y += Math.sin(baseAngle) * this.speed * pulse;
+          this.clampPosition();
+        }
+      }
+
+      attackBehavior(hero, dist) {
+        if (dist <= this.radius + hero.radius + 8 && this.attackCooldown === 0) {
+          hero.takeDamage(this.damage);
+          this.attackCooldown = 48;
+        }
+      }
+
+      render(ctx) {
+        if (this.isDead) return;
+        const squish = Math.sin(Date.now() / 160 + this.phase) * 2.5;
+        ctx.beginPath();
+        ctx.ellipse(this.x, this.y, this.radius + squish, this.radius - squish, 0, 0, Math.PI * 2);
+        ctx.fillStyle = this.hitFlash > 0 ? "#ffffff" : this.color;
+        ctx.fill();
+        this.drawStatus(ctx);
+      }
+    }
+
+    class Goblin extends Monster {
+      constructor(x, y, scale = 1) {
+        super("날쌘 고블린", Math.round(95 * scale), 2.8, x, y, 16, "#e67e22", Math.round(13 * scale), 30, 150);
+        this.zigzagSeed = Math.random() * 100;
+      }
+
+      moveBehavior(hero, dist) {
+        if (dist > this.preferredRange) {
+          const angle = Math.atan2(hero.y - this.y, hero.x - this.x);
+          const zig = Math.sin(Date.now() / 140 + this.zigzagSeed) * 0.55;
+          this.move(Math.cos(angle + zig), Math.sin(angle + zig));
+        }
+      }
+
+      attackBehavior(hero, dist) {
+        if (dist <= this.radius + hero.radius + 10 && this.attackCooldown === 0) {
+          hero.takeDamage(this.damage);
+          this.attackCooldown = 34;
+        }
+      }
+
+      render(ctx) {
+        if (this.isDead) return;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.hitFlash > 0 ? "#ffffff" : this.color;
+        ctx.fill();
+        this.drawStatus(ctx);
+      }
+    }
+
+    class Orc extends Monster {
+      constructor(x, y, scale = 1) {
+        super("거대 오크", Math.round(240 * scale), 1.35, x, y, 24, "#e74c3c", Math.round(24 * scale), 44, 300);
+        this.slamTimer = 0;
+      }
+
+      moveBehavior(hero, dist) {
+        if (dist > this.preferredRange) {
+          const angle = Math.atan2(hero.y - this.y, hero.x - this.x) + this.flankAngle * 0.25;
+          this.move(Math.cos(angle), Math.sin(angle));
+        }
+      }
+
+      attackBehavior(hero, dist, game) {
+        if (dist <= 65 && this.attackCooldown === 0) {
+          this.slamTimer = 12;
+          game.party.forEach(member => {
+            if (!member.isDead && Math.hypot(member.x - this.x, member.y - this.y) <= 75) {
+              member.takeDamage(this.damage);
+            }
+          });
+          this.attackCooldown = 68;
+        }
+      }
+
+      render(ctx) {
+        if (this.isDead) return;
+        if (this.slamTimer > 0) {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, 75, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(231, 76, 60, 0.3)";
+          ctx.fill();
+          this.slamTimer--;
+        }
+        ctx.fillStyle = this.hitFlash > 0 ? "#ffffff" : this.color;
+        ctx.fillRect(this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
+        this.drawStatus(ctx);
+      }
+    }
+
+    // ==========================================
+    // 4. 게임 상태 및 무한 웨이브 시스템
+    // ==========================================
+    const game = {
+      keys: {},
+      mouse: { x: 410, y: 260, leftDown: false, rightDown: false },
+      party: [],
+      leader: null,
+      entities: [],
+      effects: [],
+      wave: 0,
+      score: 0,
+      waveDelayTimer: 0,
+      waveBannerTimer: 0
+    };
+
+    function getEdgeSpawnPoint() {
+      const side = Math.floor(Math.random() * 4);
+      if (side === 0) return { x: Math.random() * canvas.width, y: 25 };
+      if (side === 1) return { x: Math.random() * canvas.width, y: canvas.height - 25 };
+      if (side === 2) return { x: 25, y: Math.random() * canvas.height };
+      return { x: canvas.width - 25, y: Math.random() * canvas.height };
+    }
+
+    function spawnNextWave() {
+      game.wave++;
+      game.waveBannerTimer = 110;
+      const scale = 1 + (game.wave - 1) * 0.15;
+      const count = 3 + game.wave * 2;
+
+      for (let i = 0; i < count; i++) {
+        const pos = getEdgeSpawnPoint();
+        const roll = Math.random();
+        if (roll < 0.45) {
+          game.entities.push(new Slime(pos.x, pos.y, scale));
+        } else if (roll < 0.8) {
+          game.entities.push(new Goblin(pos.x, pos.y, scale));
+        } else {
+          game.entities.push(new Orc(pos.x, pos.y, scale));
+        }
+      }
+    }
+
+    function resetGame() {
+      game.party = [
+        new Warrior(410, 260),
+        new Archer(365, 305),
+        new Mage(455, 305)
+      ];
+      game.leader = game.party[0];
+      game.entities = [...game.party];
+      game.effects = [];
+      game.wave = 0;
+      game.score = 0;
+      game.waveDelayTimer = 0;
+      spawnNextWave();
+      renderPartyUI();
+    }
+
+    function setLeader(index) {
+      if (game.party[index] && !game.party[index].isDead) {
+        game.leader = game.party[index];
+        renderPartyUI();
+      }
+    }
+
+    function renderPartyUI() {
+      partyBar.innerHTML = game.party.map((hero, idx) => {
+        const isLeader = (game.leader === hero);
+        const hpPct = Math.round((hero.hp / hero.maxHp) * 100);
+        const cdPct = Math.round(((hero.skillCdMax - hero.skillCooldown) / hero.skillCdMax) * 100);
+        return `
+          <div class="hero-card ${isLeader ? 'active' : ''} ${hero.isDead ? 'dead' : ''}" onclick="setLeader(${idx})">
+            <div class="card-header">
+              <span>[${idx + 1}] ${hero.name}</span>
+              <span class="badge">${hero.isDead ? '전투불능' : (isLeader ? '👑 마우스 조준' : '🤖 AI 동료')}</span>
+            </div>
+            <div class="bar-bg"><div class="hp-fill" style="width:${hpPct}%"></div></div>
+            <div class="bar-bg" style="height:4px;"><div class="cd-fill" style="width:${cdPct}%"></div></div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 키보드 및 마우스 입력 이벤트
+    window.addEventListener('keydown', e => {
+      game.keys[e.code] = true;
+      if (e.code === 'Digit1') setLeader(0);
+      if (e.code === 'Digit2') setLeader(1);
+      if (e.code === 'Digit3') setLeader(2);
+    });
+    window.addEventListener('keyup', e => game.keys[e.code] = false);
+
+    canvas.addEventListener('mousemove', e => {
+      const rect = canvas.getBoundingClientRect();
+      game.mouse.x = e.clientX - rect.left;
+      game.mouse.y = e.clientY - rect.top;
+    });
+
+    canvas.addEventListener('mousedown', e => {
+      if (e.button === 0) game.mouse.leftDown = true;
+      if (e.button === 2) game.mouse.rightDown = true;
+    });
+
+    window.addEventListener('mouseup', e => {
+      if (e.button === 0) game.mouse.leftDown = false;
+      if (e.button === 2) game.mouse.rightDown = false;
+    });
+
+    canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+    resetGame();
+
+    // ==========================================
+    // 5. 메인 게임 루프 (갱신 -> 투사체 -> 렌더링)
+    // ==========================================
+    function updateEffects() {
+      game.effects.forEach(ef => {
+        if (ef.type === "arrow") {
+          ef.x += ef.vx;
+          ef.y += ef.vy;
+          ef.life--;
+          game.entities.forEach(e => {
+            if (e instanceof Monster && !e.isDead && Math.hypot(e.x - ef.x, e.y - ef.y) < e.radius + 7) {
+              if (ef.pierce) {
+                if (!ef.hitIds.has(e)) {
+                  e.takeDamage(ef.damage);
+                  ef.hitIds.add(e);
+                }
+              } else {
+                e.takeDamage(ef.damage);
+                ef.life = 0;
+              }
+            }
+          });
+        } else if (ef.type === "fireball") {
+          ef.x += ef.vx;
+          ef.y += ef.vy;
+          ef.life--;
+          let exploded = false;
+
+          // 마우스 목표 지점에 도달하거나 적과 충돌 시 폭발
+          if (Math.hypot(ef.destX - ef.x, ef.destY - ef.y) < 10 || ef.life <= 0) {
+            exploded = true;
+          } else {
+            game.entities.forEach(e => {
+              if (e instanceof Monster && !e.isDead && Math.hypot(e.x - ef.x, e.y - ef.y) < e.radius + 10) {
+                exploded = true;
+              }
+            });
+          }
+
+          if (exploded) {
+            ef.life = 0;
+            game.effects.push({ type: "explosion", x: ef.x, y: ef.y, radius: ef.aoeRadius, timer: 12 });
+            game.entities.forEach(m => {
+              if (m instanceof Monster && !m.isDead && Math.hypot(m.x - ef.x, m.y - ef.y) <= ef.aoeRadius) {
+                m.takeDamage(ef.damage);
+              }
+            });
+          }
+        } else if (ef.type === "meteor") {
+          if (!ef.triggered) {
+            ef.triggered = true;
+            game.entities.forEach(m => {
+              if (m instanceof Monster && !m.isDead && Math.hypot(m.x - ef.x, m.y - ef.y) <= ef.radius) {
+                m.takeDamage(ef.damage);
+              }
+            });
+          }
+          ef.timer--;
+        } else if (ef.type === "explosion") {
+          ef.timer--;
+        }
+      });
+
+      game.effects = game.effects.filter(ef => (ef.life === undefined || ef.life > 0) && (ef.timer === undefined || ef.timer > 0));
+    }
+
+    function renderEffects() {
+      game.effects.forEach(ef => {
+        if (ef.type === "arrow") {
+          ctx.save();
+          ctx.translate(ef.x, ef.y);
+          ctx.rotate(ef.angle);
+          ctx.fillStyle = ef.pierce ? "#00ffcc" : "#a8e6cf";
+          ctx.fillRect(-10, -2, 20, 4);
+          ctx.restore();
+        } else if (ef.type === "fireball") {
+          ctx.beginPath();
+          ctx.arc(ef.x, ef.y, 9, 0, Math.PI * 2);
+          ctx.fillStyle = "#ff6b6b";
+          ctx.fill();
+        } else if (ef.type === "explosion") {
+          ctx.beginPath();
+          ctx.arc(ef.x, ef.y, ef.radius, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255, 107, 107, 0.35)";
+          ctx.fill();
+        } else if (ef.type === "meteor") {
+          ctx.beginPath();
+          ctx.arc(ef.x, ef.y, ef.radius, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(155, 89, 182, 0.4)";
+          ctx.fill();
+          ctx.strokeStyle = "#e056fd";
+          ctx.lineWidth = 3;
+          ctx.stroke();
+        }
+      });
+    }
+
+    // 마우스 포인터 조준선 및 타겟 마커 렌더링
+    function renderAimOverlay() {
+      if (!game.leader || game.leader.isDead) return;
+
+      // 리더에서 마우스 포인터까지의 점선 조준 가이드
+      ctx.save();
+      ctx.beginPath();
+      ctx.setLineDash([5, 5]);
+      ctx.moveTo(game.leader.x, game.leader.y);
+      ctx.lineTo(game.mouse.x, game.mouse.y);
+      ctx.strokeStyle = "rgba(248, 180, 0, 0.3)";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.restore();
+
+      // 마우스 포인터 위치 조준 원
+      ctx.beginPath();
+      ctx.arc(game.mouse.x, game.mouse.y, 10, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(248, 180, 0, 0.85)";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    let frameCount = 0;
+    function gameLoop() {
+      frameCount++;
+
+      // 1. 갱신 (Update)
+      game.entities.forEach(unit => unit.update(game));
+      Unit.resolveCollisions(game.entities);
+      updateEffects();
+
+      // 처치된 몬스터 점수 합산 및 제거
+      game.entities.forEach(e => {
+        if (e instanceof Monster && e.isDead && !e.scored) {
+          e.scored = true;
+          game.score += e.scoreValue;
+        }
+      });
+      game.entities = game.entities.filter(unit => !unit.isDead);
+
+      // 리더 사망 시 생존 동료로 자동 승계
+      if (game.leader && game.leader.isDead) {
+        const nextAlive = game.party.find(h => !h.isDead);
+        if (nextAlive) game.leader = nextAlive;
+      }
+
+      // 무한 웨이브 체크
+      const aliveMonsters = game.entities.filter(e => e instanceof Monster);
+      const aliveParty = game.party.filter(h => !h.isDead);
+
+      if (aliveParty.length > 0 && aliveMonsters.length === 0) {
+        game.waveDelayTimer++;
+        if (game.waveDelayTimer >= 90) {
+          game.waveDelayTimer = 0;
+          game.party.forEach(h => h.heal(25));
+          spawnNextWave();
+        }
+      }
+
+      if (frameCount % 6 === 0) renderPartyUI();
+
+      // 2. 렌더링 (Render)
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      renderAimOverlay();
+      renderEffects();
+
+      game.entities.forEach(unit => {
+        if (unit instanceof Human) {
+          unit.render(ctx, game.leader === unit);
+        } else {
+          unit.render(ctx);
+        }
+      });
+
+      // 상단 HUD (웨이브 & 점수)
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 15px sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText(`🌊 WAVE ${game.wave}   |   👾 남은 적: ${aliveMonsters.length}   |   🏆 점수: ${game.score}`, 16, 26);
+
+      if (game.waveBannerTimer > 0) {
+        game.waveBannerTimer--;
+        ctx.fillStyle = "rgba(248, 180, 0, 0.92)";
+        ctx.font = "bold 32px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(`WAVE ${game.wave} START!`, canvas.width / 2, 110);
+      }
+
+      if (aliveParty.length === 0) {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#ff4d4d";
+        ctx.font = "bold 30px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(`파티 전멸! 최종 도달: WAVE ${game.wave} (점수: ${game.score})`, canvas.width / 2, canvas.height / 2 - 15);
+        ctx.fillStyle = "#eaeaea";
+        ctx.font = "16px sans-serif";
+        ctx.fillText("상단의 [🔄 새 게임 시작] 버튼을 눌러 다시 도전하세요.", canvas.width / 2, canvas.height / 2 + 22);
+      }
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+  </script>
+</body>
+</html>

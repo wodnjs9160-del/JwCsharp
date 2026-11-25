@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\game1\\JwCsharp\\ConsoleApp1\\Learn.csproj": {}
+    "C:\\game1\\JwCsharp\\Learn\\Learn.csproj": {}
   },
   "projects": {
-    "C:\\game1\\JwCsharp\\ConsoleApp1\\Learn.csproj": {
+    "C:\\game1\\JwCsharp\\Learn\\Learn.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\game1\\JwCsharp\\ConsoleApp1\\Learn.csproj",
+        "projectUniqueName": "C:\\game1\\JwCsharp\\Learn\\Learn.csproj",
         "projectName": "Learn",
-        "projectPath": "C:\\game1\\JwCsharp\\ConsoleApp1\\Learn.csproj",
+        "projectPath": "C:\\game1\\JwCsharp\\Learn\\Learn.csproj",
         "packagesPath": "C:\\Users\\tlqkf\\.nuget\\packages\\",
-        "outputPath": "C:\\game1\\JwCsharp\\ConsoleApp1\\obj\\",
+        "outputPath": "C:\\game1\\JwCsharp\\Learn\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\tlqkf\\AppData\\Roaming\\NuGet\\NuGet.Config",
