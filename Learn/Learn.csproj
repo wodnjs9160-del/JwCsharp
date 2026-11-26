@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="TetrisGame %281%29.cs" />
+    <Compile Remove="만들면서클래스배우기.cs" />
     <Compile Remove="정점멤버와객체복사.cs" />
   </ItemGroup>
 

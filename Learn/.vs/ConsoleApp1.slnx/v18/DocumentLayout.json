@@ -1,12 +1,38 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\game1\\JwCsharp\\Learn\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{243EA969-4464-0B5E-2691-FE0852137631}|Learn.csproj|c:\\game1\\jwcsharp\\learn\\tetrisgame-v7.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{243EA969-4464-0B5E-2691-FE0852137631}|Learn.csproj|solutionrelative:tetrisgame-v7.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "TetrisGame-v7.cs",
+              "DocumentMoniker": "C:\\game1\\JwCsharp\\Learn\\TetrisGame-v7.cs",
+              "RelativeDocumentMoniker": "TetrisGame-v7.cs",
+              "ToolTip": "C:\\game1\\JwCsharp\\Learn\\TetrisGame-v7.cs",
+              "RelativeToolTip": "TetrisGame-v7.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-26T11:55:40.117Z",
+              "EditorCaption": "",
+              "OwnerCaption": "%2"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

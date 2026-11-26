@@ -1,0 +1,17 @@
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\bin\Debug\net10.0\ConsoleGame.exe
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\bin\Debug\net10.0\ConsoleGame.deps.json
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\bin\Debug\net10.0\ConsoleGame.runtimeconfig.json
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\bin\Debug\net10.0\ConsoleGame.runtimeconfig.dev.json
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\bin\Debug\net10.0\ConsoleGame.dll
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\bin\Debug\net10.0\ConsoleGame.pdb
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\obj\Debug\net10.0\ConsoleGame.GeneratedMSBuildEditorConfig.editorconfig
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\obj\Debug\net10.0\ConsoleGame.AssemblyInfoInputs.cache
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\obj\Debug\net10.0\ConsoleGame.AssemblyInfo.cs
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\obj\Debug\net10.0\ConsoleGame.csproj.CoreCompileInputs.cache
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\obj\Debug\net10.0\ConsoleGame.sourcelink.json
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\obj\Debug\net10.0\ConsoleGame.dll
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\obj\Debug\net10.0\refint\ConsoleGame.dll
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\obj\Debug\net10.0\ConsoleGame.pdb
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\obj\Debug\net10.0\ConsoleGame.genruntimeconfig.cache
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\obj\Debug\net10.0\ref\ConsoleGame.dll
+C:\game1\JwCsharp\ConsoleGameEngine\ConsoleGame\obj\Debug\net10.0\ConsoleG.E8750121.Up2Date
