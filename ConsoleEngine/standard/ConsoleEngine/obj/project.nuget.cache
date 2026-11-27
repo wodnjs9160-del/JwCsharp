@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "c/JvQXQ6EWM=",
+  "success": true,
+  "projectFilePath": "C:\\game1\\JwCsharp\\ConsoleEngine\\standard\\ConsoleEngine\\ConsoleEngine.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\tlqkf\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.23\\microsoft.windowsdesktop.app.ref.9.0.23.nupkg.sha512",
+    "C:\\Users\\tlqkf\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.23\\microsoft.netcore.app.ref.9.0.23.nupkg.sha512",
+    "C:\\Users\\tlqkf\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.23\\microsoft.aspnetcore.app.ref.9.0.23.nupkg.sha512"
+  ],
+  "logs": []
+}
